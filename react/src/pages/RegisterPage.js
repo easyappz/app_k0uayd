@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, TextField, Button, Container, Paper } from '@mui/material';
+import { Box, Typography, TextField, Button, Container, Paper, Alert } from '@mui/material';
 import { authApi } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -8,20 +8,56 @@ function RegisterPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({ username: '', email: '', password: '', server: '' });
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { username: '', email: '', password: '', server: '' };
+
+    if (!username) {
+      newErrors.username = 'Username is required';
+      isValid = false;
+    } else if (username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+      isValid = false;
+    }
+
+    if (!email) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email)) {
+      newErrors.email = 'Invalid email address';
+      isValid = false;
+    }
+
+    if (!password) {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setErrors({ username: '', email: '', password: '', server: '' });
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       const response = await authApi.register({ username, email, password });
       register(response.data.user, response.data.token);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setErrors({ ...errors, server: err.response?.data?.message || 'Registration failed' });
     }
   };
 
@@ -31,10 +67,10 @@ function RegisterPage() {
         <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
           Sign Up
         </Typography>
-        {error && (
-          <Typography color="error" sx={{ mb: 2 }}>
-            {error}
-          </Typography>
+        {errors.server && (
+          <Alert severity="error" sx={{ mb: 2, width: '100%' }}>
+            {errors.server}
+          </Alert>
         )}
         <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: 400 }}>
           <TextField
@@ -46,6 +82,8 @@ function RegisterPage() {
             autoFocus
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            error={!!errors.username}
+            helperText={errors.username}
           />
           <TextField
             margin="normal"
@@ -56,6 +94,8 @@ function RegisterPage() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={!!errors.email}
+            helperText={errors.email}
           />
           <TextField
             margin="normal"
@@ -67,6 +107,8 @@ function RegisterPage() {
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={!!errors.password}
+            helperText={errors.password}
           />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, py: 1.5 }}>
             Sign Up
