@@ -40,8 +40,8 @@ function SearchPage() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
-        <Box sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: 1, mb: 3 }}>
-          <Typography variant="h5" gutterBottom>Search Users</Typography>
+        <Box className="fade-in" sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)', mb: 3 }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>Search Users</Typography>
           <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
             <TextField
               fullWidth
@@ -50,11 +50,13 @@ function SearchPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               disabled={loading}
+              sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
             />
             <Button
               variant="contained"
               onClick={handleSearch}
               disabled={!searchQuery.trim() || loading}
+              sx={{ borderRadius: 1, transition: 'background-color 0.2s' }}
             >
               {loading ? <CircularProgress size={24} /> : 'Search'}
             </Button>

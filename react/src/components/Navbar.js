@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Box, IconButton, Badge } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, IconButton, Badge, Avatar } from '@mui/material';
 import { Message, Notifications } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
@@ -34,25 +34,28 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="fixed" color="primary" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar position="fixed" color="primary" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
       <Toolbar>
-        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={() => navigate('/')}>
+        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, cursor: 'pointer', fontWeight: 500 }} onClick={() => navigate('/')}>
           SocialNet
         </Typography>
         {currentUser && (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton color="inherit" onClick={() => navigate('/messages')}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <IconButton color="inherit" onClick={() => navigate('/messages')} sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}>
               <Badge badgeContent={unreadCount} color="error">
                 <Message />
               </Badge>
             </IconButton>
-            <IconButton color="inherit">
+            <IconButton color="inherit" sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}>
               <Notifications />
             </IconButton>
-            <Typography variant="body2" sx={{ ml: 2, cursor: 'pointer' }} onClick={() => navigate('/profile')}>
-              {currentUser.username}
-            </Typography>
-            <Typography variant="body2" sx={{ ml: 2, cursor: 'pointer' }} onClick={handleLogout}>
+            <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => navigate('/profile')}>
+              <Avatar sx={{ width: 32, height: 32, mr: 1 }} />
+              <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
+                {currentUser.username}
+              </Typography>
+            </Box>
+            <Typography variant="body2" sx={{ cursor: 'pointer', color: '#fff', opacity: 0.8, '&:hover': { opacity: 1 } }} onClick={handleLogout}>
               Logout
             </Typography>
           </Box>

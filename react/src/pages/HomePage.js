@@ -31,10 +31,10 @@ function HomePage() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={8}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 500, color: '#333' }}>
           News Feed
         </Typography>
-        <Box sx={{ mb: 3, backgroundColor: '#ffffff', p: 2, borderRadius: 2, boxShadow: 1 }}>
+        <Box className="fade-in" sx={{ mb: 3, backgroundColor: '#ffffff', p: 2, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
           <TextField
             fullWidth
             multiline
@@ -43,9 +43,14 @@ function HomePage() {
             placeholder="What's on your mind?"
             value={newPost}
             onChange={(e) => setNewPost(e.target.value)}
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
           />
-          <Button variant="contained" onClick={handlePostSubmit} disabled={!newPost.trim()}>
+          <Button 
+            variant="contained" 
+            onClick={handlePostSubmit} 
+            disabled={!newPost.trim()}
+            sx={{ borderRadius: 1, transition: 'background-color 0.2s' }}
+          >
             Post
           </Button>
         </Box>
@@ -54,8 +59,8 @@ function HomePage() {
         ))}
       </Grid>
       <Grid item xs={12} md={4}>
-        <Box sx={{ backgroundColor: '#ffffff', p: 2, borderRadius: 2, boxShadow: 1 }}>
-          <Typography variant="h6" gutterBottom>
+        <Box className="fade-in" sx={{ backgroundColor: '#ffffff', p: 2, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 500 }}>
             Suggestions
           </Typography>
           <Typography variant="body2" color="text.secondary">

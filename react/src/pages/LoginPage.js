@@ -56,8 +56,8 @@ function LoginPage() {
 
   return (
     <Container component="main" maxWidth="sm" sx={{ mt: 10 }}>
-      <Paper sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: 3, boxShadow: 3 }}>
-        <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+      <Paper className="fade-in" sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: 3, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+        <Typography component="h1" variant="h5" sx={{ mb: 3, fontWeight: 500, color: '#1e90ff' }}>
           Sign In
         </Typography>
         {errors.server && (
@@ -78,6 +78,7 @@ function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             error={!!errors.email}
             helperText={errors.email}
+            sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
           />
           <TextField
             margin="normal"
@@ -91,13 +92,19 @@ function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             error={!!errors.password}
             helperText={errors.password}
+            sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, py: 1.5 }}>
+          <Button 
+            type="submit" 
+            fullWidth 
+            variant="contained" 
+            sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 1, transition: 'background-color 0.2s' }}
+          >
             Sign In
           </Button>
           <Typography variant="body2" align="center" sx={{ mt: 2 }}>
             Don't have an account?{' '}
-            <Button variant="text" onClick={() => navigate('/register')}>
+            <Button variant="text" onClick={() => navigate('/register')} sx={{ color: '#1e90ff', '&:hover': { textDecoration: 'underline' } }}>
               Sign Up
             </Button>
           </Typography>

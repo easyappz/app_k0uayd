@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
+import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Box } from '@mui/material';
 import { Home, Person, People, Message, Search } from '@mui/icons-material';
 
 const drawerWidth = 240;
@@ -22,16 +22,23 @@ function Sidebar() {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
+        display: { xs: 'none', sm: 'block' },
         '& .MuiDrawer-paper': {
           width: drawerWidth,
           boxSizing: 'border-box',
           backgroundColor: '#ffffff',
           color: '#333',
+          boxShadow: '1px 0 4px rgba(0,0,0,0.1)',
         },
       }}
       variant="permanent"
       anchor="left"
     >
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6" color="primary" sx={{ fontWeight: 500 }}>
+          Menu
+        </Typography>
+      </Box>
       <Divider />
       <List>
         {menuItems.map((item) => (
@@ -47,6 +54,7 @@ function Sidebar() {
                 '&:hover': {
                   backgroundColor: '#f0f7ff',
                 },
+                transition: 'background-color 0.2s, color 0.2s',
               }}
             >
               <ListItemIcon>

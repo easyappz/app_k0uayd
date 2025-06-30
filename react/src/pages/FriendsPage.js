@@ -58,8 +58,8 @@ function FriendsPage() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
-        <Box sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: 1, mb: 3 }}>
-          <Typography variant="h5" gutterBottom>Friends ({friends.length})</Typography>
+        <Box className="fade-in" sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)', mb: 3 }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>Friends ({friends.length})</Typography>
           {friends.length > 0 ? (
             friends.map(friend => (
               <Box key={friend._id} sx={{ mb: 2 }}>
@@ -76,8 +76,8 @@ function FriendsPage() {
         </Box>
       </Grid>
       <Grid item xs={12} md={6}>
-        <Box sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: 1, mb: 3 }}>
-          <Typography variant="h5" gutterBottom>Friend Requests ({friendRequests.length})</Typography>
+        <Box className="fade-in" sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)', mb: 3 }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>Friend Requests ({friendRequests.length})</Typography>
           {friendRequests.length > 0 ? (
             friendRequests.map(request => (
               <Box key={request._id} sx={{ mb: 2 }}>
@@ -89,7 +89,7 @@ function FriendsPage() {
                 <Button
                   variant="outlined"
                   size="small"
-                  sx={{ mt: 1, ml: 2 }}
+                  sx={{ mt: 1, ml: 2, borderRadius: 1, transition: 'background-color 0.2s' }}
                   onClick={() => handleRejectRequest(request._id)}
                 >
                   Reject

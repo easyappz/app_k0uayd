@@ -57,20 +57,25 @@ function ProfilePage() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={4}>
-        <Box sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: 1, mb: 3 }}>
-          <Avatar src={profile.profile.avatar || ''} alt={profile.username} sx={{ width: 100, height: 100, mb: 2, mx: 'auto' }} />
-          <Typography variant="h6" align="center">{profile.username}</Typography>
+        <Box className="fade-in" sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)', mb: 3 }}>
+          <Avatar src={profile.profile.avatar || ''} alt={profile.username} sx={{ width: 120, height: 120, mb: 2, mx: 'auto', bgcolor: '#1e90ff' }} />
+          <Typography variant="h6" align="center" sx={{ fontWeight: 500 }}>{profile.username}</Typography>
           <Typography variant="body2" color="text.secondary" align="center">
             {profile.profile.firstName} {profile.profile.lastName}
           </Typography>
-          <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={() => setIsEditing(true)}>
+          <Button 
+            variant="contained" 
+            fullWidth 
+            sx={{ mt: 2, borderRadius: 1, transition: 'background-color 0.2s' }} 
+            onClick={() => setIsEditing(true)}
+          >
             Edit Profile
           </Button>
         </Box>
       </Grid>
       <Grid item xs={12} md={8}>
-        <Box sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: 1 }}>
-          <Typography variant="h5" gutterBottom>Profile Information</Typography>
+        <Box className="fade-in" sx={{ backgroundColor: '#ffffff', p: 3, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>Profile Information</Typography>
           {isEditing ? (
             <Box component="form">
               <TextField
@@ -80,6 +85,7 @@ function ProfilePage() {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
+                sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
               />
               <TextField
                 fullWidth
@@ -88,6 +94,7 @@ function ProfilePage() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
+                sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
               />
               <TextField
                 fullWidth
@@ -98,6 +105,7 @@ function ProfilePage() {
                 rows={3}
                 value={formData.bio}
                 onChange={handleInputChange}
+                sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
               />
               <TextField
                 fullWidth
@@ -106,16 +114,29 @@ function ProfilePage() {
                 name="avatar"
                 value={formData.avatar}
                 onChange={handleInputChange}
+                sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
               />
               <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-                <Button variant="contained" onClick={handleSave}>Save</Button>
-                <Button variant="outlined" onClick={() => setIsEditing(false)}>Cancel</Button>
+                <Button 
+                  variant="contained" 
+                  onClick={handleSave}
+                  sx={{ borderRadius: 1, transition: 'background-color 0.2s' }}
+                >
+                  Save
+                </Button>
+                <Button 
+                  variant="outlined" 
+                  onClick={() => setIsEditing(false)}
+                  sx={{ borderRadius: 1, transition: 'background-color 0.2s' }}
+                >
+                  Cancel
+                </Button>
               </Box>
             </Box>
           ) : (
             <Box>
-              <Typography variant="body1"><strong>First Name:</strong> {profile.profile.firstName}</Typography>
-              <Typography variant="body1"><strong>Last Name:</strong> {profile.profile.lastName}</Typography>
+              <Typography variant="body1" sx={{ mb: 1 }}><strong>First Name:</strong> {profile.profile.firstName}</Typography>
+              <Typography variant="body1" sx={{ mb: 1 }}><strong>Last Name:</strong> {profile.profile.lastName}</Typography>
               <Typography variant="body1"><strong>Bio:</strong> {profile.profile.bio}</Typography>
             </Box>
           )}

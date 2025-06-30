@@ -63,8 +63,8 @@ function RegisterPage() {
 
   return (
     <Container component="main" maxWidth="sm" sx={{ mt: 10 }}>
-      <Paper sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: 3, boxShadow: 3 }}>
-        <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+      <Paper className="fade-in" sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: 3, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+        <Typography component="h1" variant="h5" sx={{ mb: 3, fontWeight: 500, color: '#1e90ff' }}>
           Sign Up
         </Typography>
         {errors.server && (
@@ -84,6 +84,7 @@ function RegisterPage() {
             onChange={(e) => setUsername(e.target.value)}
             error={!!errors.username}
             helperText={errors.username}
+            sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
           />
           <TextField
             margin="normal"
@@ -96,6 +97,7 @@ function RegisterPage() {
             onChange={(e) => setEmail(e.target.value)}
             error={!!errors.email}
             helperText={errors.email}
+            sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
           />
           <TextField
             margin="normal"
@@ -109,13 +111,19 @@ function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             error={!!errors.password}
             helperText={errors.password}
+            sx={{ backgroundColor: '#f5f5f5', '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
           />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, py: 1.5 }}>
+          <Button 
+            type="submit" 
+            fullWidth 
+            variant="contained" 
+            sx={{ mt: 3, mb: 2, py: 1.5, borderRadius: 1, transition: 'background-color 0.2s' }}
+          >
             Sign Up
           </Button>
           <Typography variant="body2" align="center" sx={{ mt: 2 }}>
             Already have an account?{' '}
-            <Button variant="text" onClick={() => navigate('/login')}>
+            <Button variant="text" onClick={() => navigate('/login')} sx={{ color: '#1e90ff', '&:hover': { textDecoration: 'underline' } }}>
               Sign In
             </Button>
           </Typography>

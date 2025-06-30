@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, Grid, TextField, Button, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@mui/material';
 import { messageApi } from '../services/api';
 import { friendApi } from '../services/api';
@@ -8,6 +8,7 @@ function MessagesPage() {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -40,6 +41,10 @@ function MessagesPage() {
     return () => clearInterval(interval);
   }, [selectedFriend]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (newMessage.trim() && selectedFriend) {
       try {
@@ -55,7 +60,7 @@ function MessagesPage() {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={4}>
-        <Box sx={{ backgroundColor: '#ffffff', p: 2, borderRadius: 2, boxShadow: 1, height: 'calc(100vh - 150px)', overflowY: 'auto' }}>
+        <Box sx={{ backgroundColor: '#ffffff', p: 2, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)', height: 'calc(100vh - 150px)', overflowY: 'auto' }}>
           <Typography variant="h6" gutterBottom>Chats</Typography>
           <List>
             {friends.map(friend => (
@@ -63,10 +68,10 @@ function MessagesPage() {
                 key={friend._id}
                 selected={selectedFriend?._id === friend._id}
                 onClick={() => setSelectedFriend(friend)}
-                sx={{ cursor: 'pointer', '&.Mui-selected': { backgroundColor: '#e0f2ff' } }}
+                sx={{ cursor: 'pointer', '&.Mui-selected': { backgroundColor: '#e0f2ff' }, transition: 'background-color 0.2s' }}
               >
                 <ListItemAvatar>
-                  <Avatar src={friend.profile?.avatar || ''} alt={friend.username} />
+                  <Avatar src={friend.profile?.avatar || ''} alt={friend.username} sx={{ bgcolor: '#1e90ff' }} />
                 </ListItemAvatar>
                 <ListItemText primary={friend.username} />
               </ListItem>
@@ -75,24 +80,26 @@ function MessagesPage() {
         </Box>
       </Grid>
       <Grid item xs={12} md={8}>
-        <Box sx={{ backgroundColor: '#ffffff', p: 2, borderRadius: 2, boxShadow: 1, height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ backgroundColor: '#ffffff', p: 2, borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,0.1)', height: 'calc(100vh - 150px)', display: 'flex', flexDirection: 'column' }}>
           {selectedFriend ? (
             <>
               <Typography variant="h6" gutterBottom>Chat with {selectedFriend.username}</Typography>
-              <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
+              <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2, p: 1 }}>
                 {messages.map((msg, index) => (
                   <Box
                     key={index}
+                    className="fade-in"
                     sx={{
                       mb: 1,
-                      p: 1,
-                      borderRadius: 1,
+                      p: 1.5,
+                      borderRadius: 2,
                       maxWidth: '70%',
                       backgroundColor: msg.sender._id === selectedFriend._id ? '#f0f0f0' : '#1e90ff',
                       color: msg.sender._id === selectedFriend._id ? 'text.primary' : '#ffffff',
                       alignSelf: msg.sender._id === selectedFriend._id ? 'flex-start' : 'flex-end',
                       ml: msg.sender._id === selectedFriend._id ? 0 : 'auto',
                       mr: msg.sender._id === selectedFriend._id ? 'auto' : 0,
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
                     }}
                   >
                     <Typography variant="body2">{msg.content}</Typography>
@@ -101,6 +108,7 @@ function MessagesPage() {
                     </Typography>
                   </Box>
                 ))}
+                <div ref={messagesEndRef} />
               </Box>
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <TextField
@@ -109,8 +117,16 @@ function MessagesPage() {
                   placeholder="Type a message..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
+                  sx={{ backgroundColor: '#f5f5f5', borderRadius: 1, '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
                 />
-                <Button variant="contained" onClick={handleSendMessage} disabled={!newMessage.trim()}>Send</Button>
+                <Button 
+                  variant="contained" 
+                  onClick={handleSendMessage} 
+                  disabled={!newMessage.trim()}
+                  sx={{ borderRadius: 1, px: 3, transition: 'background-color 0.2s' }}
+                >
+                  Send
+                </Button>
               </Box>
             </>
           ) : (
