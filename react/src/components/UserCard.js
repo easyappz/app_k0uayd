@@ -10,17 +10,22 @@ function UserCard({ user, action, onAction }) {
       <CardContent sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar src={user.profile?.avatar || ''} alt={user.username} sx={{ width: 56, height: 56, mr: 2 }} />
         <div>
-          <Typography variant="h6" component="div" onClick={() => navigate(`/profile/${user._id}`)} sx={{ cursor: 'pointer' }}>
+          <Typography variant="h6" component="div" onClick={() => navigate(`/profile`)} sx={{ cursor: 'pointer' }}>
             {user.username}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {user.profile?.firstName} {user.profile?.lastName}
+            {user.profile?.firstName || ''} {user.profile?.lastName || ''}
           </Typography>
         </div>
       </CardContent>
       {action && (
         <CardActions>
-          <Button size="small" variant="contained" onClick={() => onAction(user._id)}>
+          <Button 
+            size="small" 
+            variant="contained" 
+            onClick={() => onAction(user._id)}
+            disabled={action === 'Request Sent'}
+          >
             {action}
           </Button>
         </CardActions>

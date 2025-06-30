@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box, Typography, Grid, Button } from '@mui/material';
 import UserCard from '../components/UserCard';
 import { friendApi } from '../services/api';
 
 function FriendsPage() {
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFriendsData = async () => {
@@ -14,8 +17,10 @@ function FriendsPage() {
         const requestsResponse = await friendApi.getFriendRequests();
         setFriends(friendsResponse.data);
         setFriendRequests(requestsResponse.data);
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch friends data:', error);
+        setLoading(false);
       }
     };
 
@@ -25,8 +30,8 @@ function FriendsPage() {
   const handleAcceptRequest = async (userId) => {
     try {
       await friendApi.acceptFriendRequest(userId);
-      setFriendRequests(friendRequests.filter(req => req._id !== userId));
       const acceptedUser = friendRequests.find(req => req._id === userId);
+      setFriendRequests(friendRequests.filter(req => req._id !== userId));
       setFriends([...friends, acceptedUser]);
     } catch (error) {
       console.error('Failed to accept friend request:', error);
@@ -42,6 +47,14 @@ function FriendsPage() {
     }
   };
 
+  const handleMessageFriend = (userId) => {
+    navigate(`/messages?friendId=${userId}`);
+  };
+
+  if (loading) {
+    return <Typography variant="h6" align="center">Loading...</Typography>;
+  }
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
@@ -49,10 +62,16 @@ function FriendsPage() {
           <Typography variant="h5" gutterBottom>Friends ({friends.length})</Typography>
           {friends.length > 0 ? (
             friends.map(friend => (
-              <UserCard key={friend._id} user={friend} />
+              <Box key={friend._id} sx={{ mb: 2 }}>
+                <UserCard
+                  user={friend}
+                  action="Message"
+                  onAction={() => handleMessageFriend(friend._id)}
+                />
+              </Box>
             ))
           ) : (
-            <Typography variant="body2" color="text.secondary">You have no friends yet.</Typography>
+            <Typography variant="body2" color="text.secondary">You have no friends yet. Find some on the Search page!</Typography>
           )}
         </Box>
       </Grid>
@@ -61,12 +80,21 @@ function FriendsPage() {
           <Typography variant="h5" gutterBottom>Friend Requests ({friendRequests.length})</Typography>
           {friendRequests.length > 0 ? (
             friendRequests.map(request => (
-              <UserCard
-                key={request._id}
-                user={request}
-                action="Accept"
-                onAction={handleAcceptRequest}
-              />
+              <Box key={request._id} sx={{ mb: 2 }}>
+                <UserCard
+                  user={request}
+                  action="Accept"
+                  onAction={handleAcceptRequest}
+                />
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{ mt: 1, ml: 2 }}
+                  onClick={() => handleRejectRequest(request._id)}
+                >
+                  Reject
+                </Button>
+              </Box>
             ))
           ) : (
             <Typography variant="body2" color="text.secondary">You have no pending friend requests.</Typography>

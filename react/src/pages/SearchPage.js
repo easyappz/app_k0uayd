@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Grid } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, CircularProgress } from '@mui/material';
 import UserCard from '../components/UserCard';
 import { userApi, friendApi } from '../services/api';
 
 function SearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSearch = async () => {
     if (searchQuery.trim()) {
+      setLoading(true);
+      setError('');
       try {
         const response = await userApi.searchUsers(searchQuery);
         setSearchResults(response.data);
       } catch (error) {
         console.error('Failed to search users:', error);
+        setError('Failed to load search results. Please try again.');
+        setSearchResults([]);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -41,23 +49,34 @@ function SearchPage() {
               placeholder="Enter username or name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              disabled={loading}
             />
-            <Button variant="contained" onClick={handleSearch} disabled={!searchQuery.trim()}>
-              Search
+            <Button
+              variant="contained"
+              onClick={handleSearch}
+              disabled={!searchQuery.trim() || loading}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Search'}
             </Button>
           </Box>
+          {error && (
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+              {error}
+            </Typography>
+          )}
           {searchResults.length > 0 ? (
             searchResults.map(user => (
-              <UserCard
-                key={user._id}
-                user={user}
-                action={user.friendRequestSent ? 'Request Sent' : 'Add Friend'}
-                onAction={handleSendFriendRequest}
-              />
+              <Box key={user._id} sx={{ mb: 2 }}>
+                <UserCard
+                  user={user}
+                  action={user.friendRequestSent ? 'Request Sent' : 'Add Friend'}
+                  onAction={user.friendRequestSent ? () => {} : handleSendFriendRequest}
+                />
+              </Box>
             ))
           ) : searchQuery.trim() === '' ? (
             <Typography variant="body2" color="text.secondary">Type something to search for users.</Typography>
-          ) : (
+          ) : !loading && (
             <Typography variant="body2" color="text.secondary">No users found.</Typography>
           )}
         </Box>
